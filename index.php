@@ -5,14 +5,30 @@ declare(strict_types = 1);
 namespace App;
 
 require_once "./src/Utilities/debug.php";
+require_once "./src/View.php";
 
-$action = htmlspecialchars($_GET["action"] ?? "", ENT_QUOTES, "UTF-8") ?? null;
+// error_reporting(0);
+// ini_set("display_errors", "0");
 
+const DEFAULT_ACTION = "list";
+
+$action = $_GET["action"] ?? DEFAULT_ACTION;
+
+$view = new View();
+
+$viewParams = [];
 if($action === "create"){
-    include_once "./templates/pages/create.php";
+    $page = "create";
+    $viewParams["resultCreate"] = "Udało się";
 } else {
-    include_once "./templates/pages/list.php";
+    $page = "list";
+    $viewParams["resultList"] = "Wyświetlenie notatek";
 }
+
+$view->render($page, $viewParams);
+
+
+
 
 
 

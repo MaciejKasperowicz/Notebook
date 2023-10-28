@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 ini_set("display_errors", "1");
 
 function deb($data){
-    echo "<div style='
+    echo "<br><div style='
     display:inline-block;
     background: lightblue;
     padding: 0px 20px;
