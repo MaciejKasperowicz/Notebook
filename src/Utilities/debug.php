@@ -9,7 +9,7 @@ function deb($data){
     display:inline-block;
     background: lightblue;
     padding: 0px 20px;
-    border: 1px solid blue;
+    border: 2px dashed blue;
     '>
     <pre>";
     print_r($data);
