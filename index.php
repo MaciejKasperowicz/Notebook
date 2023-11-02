@@ -4,11 +4,15 @@ declare(strict_types = 1);
 
 namespace App;
 
+use App\Exception\AppException;
+use App\Exception\ConfigurationException;
+use Throwable;
+
 require_once "./src/Utilities/debug.php";
 require_once "./src/Controller.php";
 
 $configuration = require_once "./config/config.php";
-deb($configuration);
+
 
 // error_reporting(0);
 // ini_set("display_errors", "0");
@@ -18,10 +22,25 @@ $request = [
     "post" => $_POST
 ];
 
-// (new Controller($request))->run();
+try {
+    
+    Controller::initConfiguration($configuration);
+    $controller = new Controller($request);
+    $controller->run();
+    // (new Controller($request))->run();
+} catch(ConfigurationException $e){
+    echo "<h1>Wystąpił błąd w aplikacji</h1>";
+    echo "Problem z konfiguracją. Proszę skontaktować się z administratorem";
+} catch(AppException $e){
+    echo "<h1>Wystąpił błąd w aplikacji</h1>";
+    echo "<h3> {$e->getMessage()} </h3>";
+} catch (Throwable $e) {
+    echo "<h1>Wystąpił błąd w aplikacji</h1>";
+    deb($e);
+}
 
-$controller = new Controller($request);
-$controller->run();
+
+
 
 
 
