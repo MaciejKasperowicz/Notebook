@@ -60,6 +60,18 @@ class Controller{
             break;
          
         case "show":
+            $page = "show";
+
+            $data = $this->getRequestGet();
+            $noteId = (int) $data["id"];
+            try {
+                $this->database->getNote($noteId);
+            } catch (NotFoundException $e) {
+                deb($e->getMessage());
+                exit("jestesmy w kontrolerze");
+            }
+
+            
             $viewParams= [
                 "title" => "Moja notatka",
                 "description" => "Opis"
