@@ -1,12 +1,6 @@
 <div>
     <h3>Nowa notatka</h3>
     <div>
-        <?php if($params["created"]) : ?>
-        <div>
-            <h4>Tytuł: <?php echo $params["title"]?></h4>
-            <h4>Treść: <?php echo $params["description"]?></h4>
-        </div>
-        <?php else: ?>
         <form action="/?action=create" method="POST">
             <ul>
                 <li>
@@ -22,6 +16,6 @@
                 </li>
             </ul>
         </form>
-        <?php endif; ?>
     </div>
 </div>
+

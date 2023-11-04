@@ -16,7 +16,7 @@ class Controller{
 
     private static array $configuration = [];
 
-    
+    private Database $database;
     private array $request;
     private View $view;
 
@@ -30,7 +30,7 @@ class Controller{
         if(empty(self::$configuration["db"])){
             throw new ConfigurationException("Configuration error");
         }
-        $db = new Database(self::$configuration["db"]);
+        $this->database = new Database(self::$configuration["db"]);
         $this->request = $request;
         $this->view = new View();
         
@@ -44,19 +44,21 @@ class Controller{
         switch ($this->action()) {
         case "create":
             $page = "create";
-            $created = false;
-
+            
             $data = $this->getRequestPost();
             //if($_SERVER["REQUEST_METHOD"] === "POST"){
             if(!empty($data)){
-                $created = true;
-                $viewParams= [
+                $noteData = [
                     "title" => $data["title"],
                     "description" => $data["description"]
                 ];
+                $this->database->createNote($noteData);
+                // $viewParams= [
+                //     "title" => $data["title"],
+                //     "description" => $data["description"]
+                // ];
+                header("Location: /?before=created");
             }
-        
-            $viewParams["created"] = $created;
             break;
          
         case "show":
@@ -68,7 +70,10 @@ class Controller{
         
         default:
             $page = "list";
-            $viewParams["resultList"] = "Wyświetlenie notatek";
+
+            $data = $this->getRequestGet();
+            // $viewParams["resultList"] = "Wyświetlenie notatek";
+            $viewParams["before"] = $data["before"] ?? null;
             break;
         }
         $this->view->render($page, $viewParams);
