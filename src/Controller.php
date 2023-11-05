@@ -7,6 +7,7 @@ namespace App;
 require_once "./src/Exception/ConfigurationException.php";
 
 use App\Exception\ConfigurationException;
+use App\Exception\NotFoundException;
 
 require_once "Database.php";
 require_once "View.php";
@@ -51,11 +52,8 @@ class Controller{
                     "description" => $data["description"]
                 ];
                 $this->database->createNote($noteData);
-                // $viewParams= [
-                //     "title" => $data["title"],
-                //     "description" => $data["description"]
-                // ];
                 header("Location: /?before=created");
+                exit;
             }
             break;
          
@@ -63,18 +61,22 @@ class Controller{
             $page = "show";
 
             $data = $this->getRequestGet();
-            $noteId = (int) $data["id"];
+            $noteId = (int) ($data["id"] ?? null);
+
+            if(!$noteId) {
+                header("Location: /?error=missingNoteId");
+                exit;
+            }
             try {
-                $this->database->getNote($noteId);
+                $note = $this->database->getNote($noteId);
             } catch (NotFoundException $e) {
-                deb($e->getMessage());
-                exit("jestesmy w kontrolerze");
+                header("Location: /?error=noteNotFound");
+                exit;
             }
 
             
             $viewParams= [
-                "title" => "Moja notatka",
-                "description" => "Opis"
+                "note" => $note
             ];
             break;
         
@@ -86,7 +88,8 @@ class Controller{
             // $viewParams["resultList"] = "Wyświetlenie notatek";
             $viewParams = [
                 "notes" => $this->database->getNotes(),
-                "before" => $data["before"] ?? null
+                "before" => $data["before"] ?? null,
+                "error" => $data["error"] ?? null
             ];
             break;
         }

@@ -1,10 +1,29 @@
 <div class="list">
     <section>
         <div class="message">
+            <?php if(!empty($params["error"])){
+                switch ($params["error"]) {
+                    case "missingNoteId":
+                        ?>
+                        <h3 style="color: red">Niepoprawny identyfikator notatki</h3>
+                        <?php
+                        break;
+                    case "noteNotFound":
+                        ?>
+                        <h3 style="color: red">Notatka nie została znaleziona</h3>
+                        <?php
+                        break;
+                }
+            }
+            ?>  
+        </div>
+        <div class="message">
             <?php if(!empty($params["before"])){
                 switch ($params["before"]) {
                     case "created":
-                        echo "Notatka została utworzona";
+                        ?>
+                        <h3 style="color: green">Notatka została utworzona</h3>
+                        <?php
                         break;
                 }
             }
@@ -33,7 +52,9 @@
                             <td><?php echo htmlentities($note["title"]) ?></td>
                             <td><?php echo htmlentities($note["created"]) ?></td>
                             <td>
-                                <a href="/?action=show&id=<?php echo (int) $note["id"]?>">Pokaż</a>
+                                <a href="/?action=show&id=<?php echo (int) $note["id"]?>">
+                                    <button>Szczegóły</button>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
