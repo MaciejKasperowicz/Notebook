@@ -4,13 +4,16 @@ declare(strict_types = 1);
 
 namespace App;
 
+require_once "./src/Utilities/debug.php";
+require_once "./src/NoteController.php";
+require_once "./src/Request.php";
+require_once "./src/Exception/AppException.php";
+require_once "./src/Exception/ConfigurationException.php";
+
+use App\Request;
 use App\Exception\AppException;
 use App\Exception\ConfigurationException;
 use Throwable;
-
-require_once "./src/Utilities/debug.php";
-require_once "./src/Controller.php";
-require_once "./src/Exception/AppException.php";
 
 $configuration = require_once "./config/config.php";
 
@@ -18,17 +21,20 @@ $configuration = require_once "./config/config.php";
 // error_reporting(0);
 // ini_set("display_errors", "0");
 
-$request = [
-    "get" => $_GET,
-    "post" => $_POST
-];
+// $request = [
+//     "get" => $_GET,
+//     "post" => $_POST
+// ];
+
+$request = new Request($_GET, $_POST);
+
 
 try {
     
-    Controller::initConfiguration($configuration);
-    $controller = new Controller($request);
+    AbstractController::initConfiguration($configuration);
+    $controller = new NoteController($request);
     $controller->run();
-    // (new Controller($request))->run();
+    // (new NoteController($request))->run();
 } catch(ConfigurationException $e){
     echo "<h1>Wystąpił błąd w aplikacji</h1>";
     echo "Problem z konfiguracją. Proszę skontaktować się z administratorem";
