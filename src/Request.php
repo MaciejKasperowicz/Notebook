@@ -19,7 +19,7 @@ class Request {
     }
 
     public function getParam(string $name, $default = null)
-    {
+    {   
         return $this->get[$name] ?? $default;
     }
 
