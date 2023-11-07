@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace App;
 
-require_once("Exception/StorageException.php");
-require_once("Exception/NotFoundException.php");
-require_once("Exception/ConfigurationException.php");
+// require_once("Exception/StorageException.php");
+// require_once("Exception/NotFoundException.php");
+// require_once("Exception/ConfigurationException.php");
 
 use App\Exception\StorageException;
 use App\Exception\ConfigurationException;
