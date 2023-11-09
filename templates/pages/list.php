@@ -25,6 +25,11 @@
                         <h3 style="color: green">Notatka została utworzona</h3>
                         <?php
                         break;
+                    case "edited":
+                        ?>
+                        <h3 style="color: blue">Notatka została edytowana</h3>
+                        <?php
+                        break;
                 }
             }
             ?>  
@@ -37,7 +42,7 @@
                     <tr>
                         <th>Id</th>
                         <th>Tytuł</th>
-                        <th>Created</th>
+                        <th>Utworzona</th>
                         <th>Opcje</th>
                     </tr>
                 </thead>
