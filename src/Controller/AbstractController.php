@@ -37,7 +37,7 @@ abstract class AbstractController {
         
     }
 
-    public function run():void
+    final public function run():void
     {   
         $actionMethod = $this->action() . "Action";
         if(!method_exists($this, $actionMethod)){
@@ -65,7 +65,7 @@ abstract class AbstractController {
         return $this->request->getParam("action", self::DEFAULT_ACTION);
     }
 
-    protected function redirect(string $to, array $params):void
+    final protected function redirect(string $to, array $params):void
     {
         $location = $to;
 

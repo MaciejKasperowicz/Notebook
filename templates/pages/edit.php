@@ -2,7 +2,7 @@
     <h3>Edycja notatki</h3>
     <div>
         <?php if(!empty($params['note'])): ?>
-        <?php deb($params);
+        <?php 
             $note= $params["note"];
         ?>
         <form action="/?action=edit" method="POST">

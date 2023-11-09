@@ -30,6 +30,12 @@
                         <h3 style="color: blue">Notatka została edytowana</h3>
                         <?php
                         break;
+                    case "deleted":
+                        ?>
+                        <h3 style="color: violet">Notatka
+                        została usunięta</h3>
+                        <?php
+                        break;
                 }
             }
             ?>  
@@ -59,6 +65,9 @@
                             <td>
                                 <a href="/?action=show&id=<?php echo (int) $note["id"]?>">
                                     <button>Szczegóły</button>
+                                </a>
+                                <a href="/?action=delete&id=<?php echo (int) $note["id"]?>">
+                                    <button>Usuń</button>
                                 </a>
                             </td>
                         </tr>
