@@ -45,6 +45,11 @@
             $sort = $params["sort"] ?? [];
             $by = $sort["by"] ?? "title";
             $order = $sort["order"] ?? "desc";
+
+            $page = $params["page"] ?? [];
+            $size = $page["size"] ?? 10;
+            $currentPage = $page["number"] ?? 1;
+            $pages = $page["pages"] ?? 1;
         ?>
 
         <div>
@@ -65,6 +70,21 @@
                     ></label>
                     <label>Malejąco:<input name="sortorder" type="radio" value="desc"
                     <?php echo $order === "desc" ? "checked" : "" ?>
+                    ></label>
+                </div>
+                <div>
+                    <h4>Liczba notatek na stronie</h4>
+                    <label>1 <input name="pagesize" type="radio" value="1"
+                    <?php echo $size === 1 ? "checked" : "" ?>
+                    ></label>
+                    <label>5 <input name="pagesize" type="radio" value="5"
+                    <?php echo $size === 5 ? "checked" : "" ?>
+                    ></label>
+                    <label>10 <input name="pagesize" type="radio" value="10"
+                    <?php echo $size === 10 ? "checked" : "" ?>
+                    ></label>
+                    <label>25 <input name="pagesize" type="radio" value="25"
+                    <?php echo $size === 25 ? "checked" : "" ?>
                     ></label>
                 </div>
                 <input type="submit" value="Wyślij">
@@ -92,7 +112,15 @@
                             <td><?php echo $note["id"] ?></td>
                             <td><?php echo $note["title"] ?></td>
                             <td><?php echo $note["created"] ?></td>
-                            <td>
+                            <td
+                            style="
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: center;
+                                align-items: center;
+                                list-style: none;
+                                "
+                            >
                                 <a href="/?action=show&id=<?php echo (int) $note["id"]?>">
                                     <button>Szczegóły</button>
                                 </a>
@@ -105,6 +133,42 @@
                 </tbody>
             </table>
         </div>
+
+        <?php
+            $paginationUrl = "&pagesize=$size&sortby=$by&sortorder=$order";
+        ?>
+
+        <ul class="pagination"
+        style="
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    list-style: none;
+                    "
+        >
+            <?php if($currentPage !== 1):?>
+                <li>
+                    <a href="/?currentpage=<?php echo $currentPage - 1 . $paginationUrl?>">
+                        <button><<</button>
+                    </a>
+                </li>
+            <?php endif; ?>        
+            <?php for($i = 1; $i <= $pages; $i++): ?>
+                <li>
+                    <a href="/?currentpage=<?php echo $i . $paginationUrl?>">
+                        <button><?php echo $i;?></button>
+                    </a>
+                </li>
+            <?php endfor; ?>
+            <?php if($currentPage < $pages): ?>
+                <li>
+                    <a href="/?currentpage=<?php echo $currentPage + 1 . $paginationUrl?>">
+                        <button>>></button>
+                    </a>
+                </li>
+            <?php endif; ?>        
+        </ul>
     </section>
 </div>
     
