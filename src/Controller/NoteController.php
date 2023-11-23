@@ -39,6 +39,7 @@ class NoteController extends AbstractController{
     
     public function listAction():void
     {
+        $phrase = $this->request->getParam("phrase");
         $pageNumber = (int) $this->request->getParam("currentpage", 1);
         $pageSize = (int) $this->request->getParam("pagesize", self::PAGE_SIZE);
 
@@ -49,12 +50,21 @@ class NoteController extends AbstractController{
             $pageSize = self::PAGE_SIZE;
         }
 
-        $notes = $this->database->getNotes($pageNumber, $pageSize, $sortBy, $sortOrder);
+        if($phrase){
+            $notes = $this->database->searchNotes($phrase, $pageNumber, $pageSize, $sortBy, $sortOrder);
 
-        $notesCount = $this->database->getNotesCount();
+            $notesCount = $this->database->getSearchCount($phrase);
+        } else{
+            $notes = $this->database->getNotes($pageNumber, $pageSize, $sortBy, $sortOrder);
+
+            $notesCount = $this->database->getNotesCount();
+        }
+
+        
 
         $viewParams = [
             "page" => ["number" => $pageNumber, "size" => $pageSize, "pages" => (int) ceil($notesCount / $pageSize) ],
+            "phrase" => $phrase,
             "sort" => ["by" => $sortBy,"order" => $sortOrder],
             "notes" => $notes,
             "before" => $this->request->getParam("before"),
