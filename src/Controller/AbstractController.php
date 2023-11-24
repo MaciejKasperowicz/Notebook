@@ -7,17 +7,19 @@ namespace App\Controller;
 // require_once "./src/Exception/ConfigurationException.php";
 // require_once "Database.php";
 // require_once "View.php";
-use App\Database;
+use App\Model\NoteModel;
 use App\Request;
 use App\View;
 use App\Exception\ConfigurationException;
+use App\Exception\StorageException;
+use App\Exception\NotFoundException;
 
 abstract class AbstractController {
     protected const DEFAULT_ACTION = "list";
 
     private static array $configuration = [];
 
-    protected Database $database;
+    protected NoteModel $noteModel;
     protected Request $request;
     protected View $view;
 
@@ -31,7 +33,7 @@ abstract class AbstractController {
         if(empty(self::$configuration["db"])){
             throw new ConfigurationException("Configuration error");
         }
-        $this->database = new Database(self::$configuration["db"]);
+        $this->noteModel = new NoteModel(self::$configuration["db"]);
         $this->request = $request;
         $this->view = new View();
         
@@ -39,11 +41,21 @@ abstract class AbstractController {
 
     final public function run():void
     {   
-        $actionMethod = $this->action() . "Action";
-        if(!method_exists($this, $actionMethod)){
-            $actionMethod = self::DEFAULT_ACTION . "Action";
-        } 
-        $this->$actionMethod();
+        try {
+            $actionMethod = $this->action() . "Action";
+            if(!method_exists($this, $actionMethod)){
+                $actionMethod = self::DEFAULT_ACTION . "Action";
+            } 
+            //throw new StorageException("Testowy błąd");
+            $this->$actionMethod();
+        } catch (StorageException $e) {
+            $this->view->render("error",["message" => $e->getMessage()]);
+        } catch (NotFoundException $e) {
+            $this->redirect("/", ["error" => "noteNotFound"]);
+        }
+
+
+        
 
         // switch ($this->action()) {
         // case "create":

@@ -21,7 +21,7 @@ class NoteController extends AbstractController{
                 "title" => $this->request->postParam("title"),
                 "description" => $this->request->postParam("description")
             ];
-            $this->database->createNote($noteData);
+            $this->noteModel->create($noteData);
             $this->redirect("/", ["before" => "created"]);
         }
         $this->view->render("create");
@@ -51,13 +51,13 @@ class NoteController extends AbstractController{
         }
 
         if($phrase){
-            $notes = $this->database->searchNotes($phrase, $pageNumber, $pageSize, $sortBy, $sortOrder);
+            $notes = $this->noteModel->search($phrase, $pageNumber, $pageSize, $sortBy, $sortOrder);
 
-            $notesCount = $this->database->getSearchCount($phrase);
+            $notesCount = $this->noteModel->searchCount($phrase);
         } else{
-            $notes = $this->database->getNotes($pageNumber, $pageSize, $sortBy, $sortOrder);
+            $notes = $this->noteModel->list($pageNumber, $pageSize, $sortBy, $sortOrder);
 
-            $notesCount = $this->database->getNotesCount();
+            $notesCount = $this->noteModel->count();
         }
 
         
@@ -82,7 +82,7 @@ class NoteController extends AbstractController{
                 "title" => $this->request->postParam("title"),
                 "description" => $this->request->postParam("description")
             ];
-            $this->database->editNote($noteId, $noteData);
+            $this->noteModel->edit($noteId, $noteData);
             $this->redirect("/", ["before" => "edited"]);
         }
 
@@ -98,7 +98,7 @@ class NoteController extends AbstractController{
     {
         if($this->request->isPost()){
             $noteId = (int) $this->request->postParam("id");
-            $this->database->deleteNote($noteId);
+            $this->noteModel->delete($noteId);
             $this->redirect("/", ["before" => "deleted"]);
         }
 
@@ -117,12 +117,12 @@ class NoteController extends AbstractController{
             $this->redirect("/", ["error" => "missingNoteId"]);
         }
 
-        try {
-            $note = $this->database->getNote($noteId);
-            
-        } catch (NotFoundException $e) {
-            $this->redirect("/", ["error" => "noteNotFound"]);
-        }
+        $note = $this->noteModel->get($noteId); 
+        // try {
+        //     $note = $this->noteModel->getNote($noteId); 
+        // } catch (NotFoundException $e) {
+        //     $this->redirect("/", ["error" => "noteNotFound"]);
+        // }
 
         return $note;
     }
